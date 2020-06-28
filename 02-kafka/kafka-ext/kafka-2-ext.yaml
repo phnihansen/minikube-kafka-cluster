@@ -1,0 +1,28 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka-2-ext
+  namespace: kafka-ca1
+  labels:
+    app: kafka
+    statefulset.kubernetes.io/pod-name: kafka-2
+spec:
+  ports:
+    - name: port-1
+      protocol: TCP
+      port: 9092
+      targetPort: 9092
+      nodePort: 30012
+    - name: port-2
+      protocol: TCP
+      port: 9999
+      targetPort: 9999
+      nodePort: 30022
+  selector:
+    app: kafka
+    statefulset.kubernetes.io/pod-name: kafka-2
+  type: NodePort
+  sessionAffinity: None
+  externalTrafficPolicy: Cluster
+status:
+  loadBalancer: {}

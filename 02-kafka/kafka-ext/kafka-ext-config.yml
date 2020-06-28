@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-ext-config
+  namespace: kafka-ca1
+data:
+  run.sh: |
+    #!/bin/sh
+    SET_INDEX=${HOSTNAME##*-}
+    echo "Starting initializing for pod $SET_INDEX"
+    if [ "$SET_INDEX" = "0" ]; then
+      cp /mnt/scripts/kafka-0.env /mnt/data/kafka.env
+    elif [ "$SET_INDEX" = "1" ]; then
+      cp /mnt/scripts/kafka-1.env /mnt/data/kafka.env
+    elif [ "$SET_INDEX" = "2" ]; then
+      cp /mnt/scripts/kafka-2.env /mnt/data/kafka.env
+    else
+      echo "Invalid statefulset index"
+      exit 1
+    fi
+  kafka-0.env: |
+    KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.39.161:30010
+  kafka-1.env: |
+    KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.39.161:30011
+  kafka-2.env: |
+    KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.39.161:30012
